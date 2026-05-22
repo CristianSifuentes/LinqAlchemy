@@ -22,9 +22,12 @@ Console.WriteLine($"All books have status: {queries.AllBooksHaveStatus()}");
 //Any book published in 2005
 Console.WriteLine($"Any book published in 2005: {queries.IfAnyBookWasPublished2005()}");
 
-//All books have Status...
+Console.WriteLine($"Python books:");
 PrintValues(queries.PythonBooks());
 
+//Books over 450 pages, sorted by page number in descending order
+Console.WriteLine($"Books over 450 pages, sorted by page number in descending order:");
+PrintValues(queries.BooksOver450PagesSortedByPageNumberInDescendingOrder());
 
 void PrintValues(IEnumerable<Book> books)
 {
