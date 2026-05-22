@@ -24,23 +24,26 @@ public class LinqQueries
     {
         return booksCollection;
     }
-	
-	public IEnumerable<Book> BooksAfter2000(){
 
-        // extension method
-        // return booksCollection.Where(p => p.PublishedDate.Year > 2000);
-        //query expresion 
+    public IEnumerable<Book> SearchBooks(string term)
+    {
+        return booksCollection.AsQueryable()
+            .TextFilter(term)
+            .ToList();
+    }
+
+    public IEnumerable<Book> BooksAfter2000()
+    {
         return from book in booksCollection
-                where book.PublishedDate.Year > 2000
-                select book;    
-            
-   }
-   
-   public IEnumerable<Book> BooksWithMoreThan250PagesWithWordsInAction() {
-           //extension methods
-        //return booksCollection.Where(p=> p.PageCount > 250 && p.Title.Contains("in Action"));
-        // query expression
-        return from l in booksCollection where l.PageCount > 250 && l.Title.Contains("in Action") select l;
-   }
+               where book.PublishedDate.Year > 2000
+               select book;
+    }
+
+    public IEnumerable<Book> BooksWithMoreThan250PagesWithWordsInAction()
+    {
+        return from book in booksCollection
+               where book.PageCount > 250 && book.Title.Contains("in Action")
+               select book;
+    }
 
 }

@@ -84,6 +84,7 @@ This is the perfect place to add new LINQ query methods, such as:
 - `GetBooksByCategory(string category)`
 - `GetBooksByAuthor(string author)`
 - `GetBooksPublishedAfter(DateTime date)`
+- `SearchBooks(string term)` — a dynamic search that inspects all string properties on `Book` and applies a case-insensitive text filter
 
 ### 4. `books.json`
 

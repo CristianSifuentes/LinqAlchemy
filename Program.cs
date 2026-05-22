@@ -9,6 +9,11 @@ PrintValues(queries.BooksWithMoreThan250PagesWithWordsInAction());
 //Books after 2000
 PrintValues(queries.BooksAfter2000());
 
+// Dynamic text search across all string properties in Book
+Console.WriteLine();
+Console.WriteLine("Search results for term: \"android\"");
+PrintValues(queries.SearchBooks("android"));
+
 void PrintValues(IEnumerable<Book> books)
 {
     Console.WriteLine("{0,-60} {1,15} {2,15}\n", "Title", "Pages", "Published Date");
