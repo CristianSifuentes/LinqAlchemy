@@ -1,94 +1,128 @@
 # LinqAlchemy
 
-LinqAlchemy is a small, professional .NET console application that demonstrates how to load structured JSON data and present it using a clean object model. The project is built with C# and .NET 6, and it is designed to be easy to understand, extend, and document.
+LinqAlchemy is a polished .NET console application that demonstrates how to load rich JSON book data, convert it into a strongly typed model, and execute powerful LINQ queries. The code is built for readability, extension, and real-world dynamic filtering.
 
-## Project Purpose
+## Project Overview
 
-This repository serves as a learning foundation for LINQ-based data processing and simple console-driven data presentation. It loads a JSON book catalog, converts the JSON objects into strongly typed `Book` instances, and prints a formatted table of book details.
+This repository is focused on:
+
+- Loading a JSON book catalog into a typed `Book` model
+- Using LINQ and expression-based filters to query data
+- Exposing both static and dynamic query patterns
+- Demonstrating how to safely consume external JSON data in .NET
 
 ## What You Will Learn
 
-- How to model JSON data with C# classes
-- How to deserialize JSON into a `List<T>` with `System.Text.Json`
-- How to structure a clean console application with top-level statements
-- How to separate concerns between data loading and output formatting
-- How to prepare a project for future LINQ query expansion
+- How to model JSON data in C# with `Book` objects
+- How to safely deserialize JSON with `System.Text.Json`
+- How to write `IQueryable`-based dynamic text filtering
+- How to combine LINQ query expressions with reusable search logic
+- How to add boolean queries for data validation and summary checks
 
 ## Repository Structure
 
-- `Program.cs` - application entry point and presentation logic
-- `Book.cs` - domain model representing book metadata
-- `LinqQueries.cs` - data access class for loading the book catalog
-- `books.json` - sample data source with rich book metadata in JSON format
+- `Program.cs` - console application entry point and sample execution scenarios
+- `Book.cs` - domain model for book metadata
+- `LinqQueries.cs` - query service and repository for books
+- `DynamicQueryExtensions.cs` - reusable dynamic search extension methods
+- `books.json` - sample dataset with extensive book metadata
 - `curso-linq.csproj` - .NET 6 console app project file
 - `README.md` - project documentation
 
-## Step-by-Step Code Walkthrough
+## Key Code Components
 
 ### 1. `Program.cs`
 
-This file contains the entry point for the console application.
+This file demonstrates how the application executes queries and prints results to the console.
 
-Key responsibilities:
+Current operations in the sample run:
 
-- Create an instance of `LinqQueries`
-- Request the complete book collection with `GetAllBooks()`
-- Print a neatly formatted table using the `PrintValues` method
+- Print the full book collection
+- Print books with more than 250 pages and "in Action" in the title
+- Print books published after 2000
+- Execute dynamic text searches for `android`, `java`, and `c#`
+- Validate if all books have a status
+- Check whether any book was published in 2005
 
-Important code flow:
-
-```csharp
-LinqQueries queries = new LinqQueries();
-PrintValues(queries.GetAllBooks());
-```
-
-The `PrintValues` method is responsible for rendering the table header and each book row in a readable console format.
+This sample flow is designed to show both static LINQ queries and dynamic runtime filtering.
 
 ### 2. `Book.cs`
 
-This class defines the book model used throughout the application. It intentionally includes fields that match the JSON payload, while keeping the domain model clean and straightforward.
+The `Book` model captures the data fields used by the application. It is intentionally aligned with the JSON schema while keeping the domain model simple.
 
-Properties:
+Important properties:
 
-- `Title` - the name of the book
-- `PageCount` - the number of pages in the book
-- `Status` - publication status, e.g. `PUBLISH`
-- `PublishedDate` - publication date as a `DateTime`
-- `Authors` - array of author names
-- `Categories` - array of categories or genres
+- `Title`
+- `PageCount`
+- `Status`
+- `PublishedDate`
+- `Authors`
+- `Categories`
 
-This model is suitable for LINQ operations, filtering, grouping, and sorting in a future enhancement.
+The model is ideal for LINQ queries, filtering, grouping, and extension to additional query features.
 
 ### 3. `LinqQueries.cs`
 
-This class encapsulates data loading and serves as the foundation for future LINQ query methods.
+This class is the main data service for the application.
 
-Current responsibilities:
+Features included:
 
-- Read `books.json` from disk using `StreamReader`
-- Deserialize JSON into a `List<Book>` using `System.Text.Json`
-- Provide the `GetAllBooks()` method for consumers
+- Safe loading of `books.json` from `AppContext.BaseDirectory` and fallback to the current working directory
+- Deserialization with a safe default list when JSON is missing or invalid
+- Static query methods:
+  - `GetAllBooks()`
+  - `BooksAfter2000()`
+  - `BooksWithMoreThan250PagesWithWordsInAction()`
+- Boolean summary methods:
+  - `AllBooksHaveStatus()`
+  - `IfAnyBookWasPublished2005()`
+- Dynamic text search method:
+  - `SearchBooks(string term)`
 
-Current implementation:
+Example methods:
 
 ```csharp
-public IEnumerable<Book> GetAllBooks()
+public IEnumerable<Book> SearchBooks(string term)
 {
-    return booksCollection;
+    return booksCollection.AsQueryable()
+        .TextFilter(term)
+        .ToList();
+}
+
+public bool AllBooksHaveStatus()
+{
+    return booksCollection.All(p => p.Status != string.Empty);
+}
+
+public bool IfAnyBookWasPublished2005()
+{
+    return booksCollection.Any(p => p.PublishedDate.Year == 2005);
 }
 ```
 
-This is the perfect place to add new LINQ query methods, such as:
+### 4. `DynamicQueryExtensions.cs`
 
-- `GetPublishedBooks()`
-- `GetBooksByCategory(string category)`
-- `GetBooksByAuthor(string author)`
-- `GetBooksPublishedAfter(DateTime date)`
-- `SearchBooks(string term)` — a dynamic search that inspects all string properties on `Book` and applies a case-insensitive text filter
+This file contains reusable extension methods that implement dynamic text filtering using expression trees.
 
-### 4. `books.json`
+The core feature is `TextFilter`, which works in two modes:
 
-The JSON file contains a sample dataset representing a wide collection of books. Each object includes metadata such as:
+- `IQueryable<T>.TextFilter(string term)` — strongly typed generic filter
+- `IQueryable.TextFilter(string term)` — untyped filter for runtime query scenarios
+
+How it works:
+
+- Identifies all `string` properties on the target type
+- Builds an expression tree that checks each property for the search term
+- Combines property checks using `||`
+- Applies case-insensitive filtering via `ToLowerInvariant()`
+
+This is the same technique used in production-quality dynamic search systems, and it avoids hard-coded switch cases.
+
+### 5. `books.json`
+
+The JSON file includes a sample book catalog with rich metadata.
+
+Example fields:
 
 - `title`
 - `pageCount`
@@ -100,13 +134,13 @@ The JSON file contains a sample dataset representing a wide collection of books.
 - `authors`
 - `categories`
 
-The data file contains more fields than the current model consumes. This makes the data source ideal for future feature expansion while keeping the initial implementation focused and easy to understand.
+The dataset contains more information than the current model consumes, which makes the project easy to extend for new query and display features.
 
-### 5. `curso-linq.csproj`
+### 6. `curso-linq.csproj`
 
-The project file defines the application type and target framework.
+The project file configures the .NET console app.
 
-Key configuration:
+Key settings:
 
 - `OutputType`: `Exe`
 - `TargetFramework`: `net6.0`
@@ -114,17 +148,17 @@ Key configuration:
 - `ImplicitUsings`: `enable`
 - `Nullable`: `enable`
 
-This modern configuration reduces boilerplate and enables nullable reference type safety.
+It also ensures `books.json` is copied to the output folder on build.
 
 ## Build and Run Instructions
 
-To build the project, run:
+Build the project:
 
 ```bash
 dotnet build
 ```
 
-To execute the application, run:
+Run the project:
 
 ```bash
 dotnet run
@@ -132,42 +166,48 @@ dotnet run
 
 Expected behavior:
 
-- The application loads `books.json`
-- It deserializes the JSON into a typed `List<Book>`
-- It prints a table with `Title`, `Pages`, and `Published Date`
+- `books.json` is loaded successfully
+- The application prints the full book list
+- Static LINQ query results are shown
+- Dynamic text search results for terms like `android`, `java`, and `c#` are displayed
+- Boolean validation output is shown for status and publication year
 
-## Example Console Output
+## Console Output Example
 
-The output is formatted with aligned columns, for example:
+The sample output includes several query results. Example sections are:
 
-```
-Title                                                         Pages      Published Date
-Unlocking Android                                              416      04/01/2009
-Android in Action, Second Edition                              592      01/14/2011
-Specification by Example                                         0      06/03/2011
-```
+- Full book collection table
+- Books matching `android`
+- Books matching `java`
+- Books matching `c#`
+- Boolean summary lines:
+  - `All books have status: true`
+  - `Any book published in 2005: false`
 
 ## Future Enhancements
 
-This codebase is intentionally compact and ready for extension.
+This project is designed for iterative improvement.
 
 Recommended next steps:
 
-- Add LINQ query methods in `LinqQueries.cs`
-- Implement filtering and sorting options
-- Add unit tests for data loading and formatting
-- Support additional output formats (CSV, JSON, HTML)
-- Add command-line options for dynamic queries
-- Add `BookRepository` or service layer for better separation of concerns
+- Add `GetBooksByCategory(string category)`
+- Add `GetBooksByAuthor(string author)`
+- Add pagination and sorting options
+- Add unit tests for `DynamicQueryExtensions` and `LinqQueries`
+- Add command-line arguments for dynamic queries
+- Add additional output formats such as CSV, JSON, or HTML
 
-## Why This Documentation Matters
+## Why This Project Matters
 
-This README is designed to provide an immediate, high-quality introduction to the codebase, while also serving as a foundation for polished future development. It explains the current implementation clearly and describes where to extend the application next.
+`LinqAlchemy` is more than a sample app: it is a practical template for building dynamic querying systems in .NET.
 
-## Contribution Notes
+It shows how to:
 
-If you want to expand this project, start by adding query methods to `LinqQueries.cs` and updating the presentation logic in `Program.cs`. Keep the project structure clean, and document each new feature in this README so the project remains professional and maintainable.
+- safely consume external JSON data
+- build reusable LINQ query services
+- add runtime text search without hard-coded switch logic
+- keep query behavior explicit, testable, and maintainable
 
 ---
 
-Thank you for exploring `LinqAlchemy`. This project is a strong starting point for building amazing LINQ-powered applications in .NET.
+Thank you for exploring `LinqAlchemy`. This project is a strong foundation for building powerful, dynamic data applications with C# and LINQ.
