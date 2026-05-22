@@ -29,6 +29,10 @@ PrintValues(queries.PythonBooks());
 Console.WriteLine($"Books over 450 pages, sorted by page number in descending order:");
 PrintValues(queries.BooksOver450PagesSortedByPageNumberInDescendingOrder());
 
+//First three Java books ordered by date
+Console.WriteLine($"First three Java books ordered by date:");
+PrintValues(queries.FirstThreeJavaBooksOrderedByDate());
+
 void PrintValues(IEnumerable<Book> books)
 {
     Console.WriteLine("{0,-60} {1,15} {2,15}\n", "Title", "Pages", "Published Date");

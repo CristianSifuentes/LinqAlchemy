@@ -84,9 +84,8 @@ public class LinqQueries
 	
 
       return booksCollection.Take(3)
-        .Select(p=> new Book() { Title= p.Title, PageCount= p.PageCount  });
-		
-		}
+        .Select(p=> new Book() { Title= p.Title, PageCount= p.PageCount, Authors= p.Authors, Categories= p.Categories, PublishedDate= p.PublishedDate, Status= p.Status });	
+	}
 
 
 }
