@@ -7,7 +7,7 @@ public class LinqQueries
         using (StreamReader reader = new StreamReader("books.json"))
         {
             string json = reader.ReadToEnd();
-            this.booksCollection = System.Text.Json.JsonSerializer.Deserialize<List<Book>>(json, new System.Text.Json.JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            this.booksCollection = System.Text.Json.JsonSerializer.Deserialize<List<Book>>(json, new System.Text.Json.JsonSerializerOptions() { PropertyNameCaseInsensitive = true }) ?? new List<Book>();
         }
     }
 
