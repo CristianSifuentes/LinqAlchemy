@@ -1,2 +1,2 @@
 # LinqAlchemy
-This is a repository for learn more about LINQ
+This repository is for learning more about LINQ.

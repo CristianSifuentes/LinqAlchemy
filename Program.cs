@@ -1,12 +1,12 @@
 ﻿LinqQueries queries = new LinqQueries();
 
-ImprimirValores(queries.TodaLaColeccion());
+PrintValues(queries.GetAllBooks());
 
-void ImprimirValores(IEnumerable<Book> listadelibros)
+void PrintValues(IEnumerable<Book> books)
 {
-    Console.WriteLine("{0,-60} {1, 15} {2, 15}\n", "Titulo", "N. Paginas", "Fecha publicacion");
-    foreach(var item in listadelibros)
+    Console.WriteLine("{0,-60} {1,15} {2,15}\n", "Title", "Pages", "Published Date");
+    foreach (var book in books)
     {
-        Console.WriteLine("{0,-60} {1, 15} {2, 15}", item.Title, item.PageCount, item.PublishedDate.ToShortDateString());
+        Console.WriteLine("{0,-60} {1,15} {2,15}", book.Title, book.PageCount, book.PublishedDate.ToShortDateString());
     }
 }
