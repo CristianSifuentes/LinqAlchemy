@@ -38,6 +38,16 @@ public class LinqQueries
                where book.PublishedDate.Year > 2000
                select book;
     }
+	
+	public bool AllBooksHaveStatus(){  
+	  return booksCollection.All(p=> p.Status!= string.Empty);
+	}
+
+	public bool IfAnyBookWasPublished2005 (
+	){
+        return booksCollection.Any(p => p.PublishedDate.Year == 2005);
+    }
+
 
     public IEnumerable<Book> BooksWithMoreThan250PagesWithWordsInAction()
     {

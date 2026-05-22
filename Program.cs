@@ -14,6 +14,15 @@ Console.WriteLine();
 Console.WriteLine("Search results for term: \"android\"");
 PrintValues(queries.SearchBooks("android"));
 
+PrintValues(queries.SearchBooks("java"));
+PrintValues(queries.SearchBooks("c#"));
+
+//All books have Status
+Console.WriteLine($"All books have status: {queries.AllBooksHaveStatus()}");
+//Any book published in 2005
+Console.WriteLine($"Any book published in 2005: {queries.IfAnyBookWasPublished2005()}");
+
+
 void PrintValues(IEnumerable<Book> books)
 {
     Console.WriteLine("{0,-60} {1,15} {2,15}\n", "Title", "Pages", "Published Date");
