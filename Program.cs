@@ -22,6 +22,9 @@ Console.WriteLine($"All books have status: {queries.AllBooksHaveStatus()}");
 //Any book published in 2005
 Console.WriteLine($"Any book published in 2005: {queries.IfAnyBookWasPublished2005()}");
 
+//All books have Status...
+PrintValues(queries.PythonBooks());
+
 
 void PrintValues(IEnumerable<Book> books)
 {

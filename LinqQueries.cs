@@ -55,5 +55,9 @@ public class LinqQueries
                where book.PageCount > 250 && book.Title.Contains("in Action")
                select book;
     }
-
+	
+	public IEnumerable<Book> PythonBooks(){
+	
+     return booksCollection.Where(p => p.Categories.Contains("Python"));
+    }
 }
