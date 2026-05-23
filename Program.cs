@@ -33,6 +33,32 @@ PrintValues(queries.BooksOver450PagesSortedByPageNumberInDescendingOrder());
 Console.WriteLine($"First three Java books ordered by date:");
 PrintValues(queries.FirstThreeJavaBooksOrderedByDate());
 
+// Examples using the newly renamed English methods
+Console.WriteLine();
+Console.WriteLine($"Count books between 200 and 500 pages: {queries.CountBooksBetween200And500Pages()}");
+Console.WriteLine($"Earliest publication date: {queries.EarliestPublicationDate():d}");
+Console.WriteLine($"Max page count: {queries.MaxPageCount()}");
+var fewest = queries.BookWithFewestPages();
+Console.WriteLine($"Book with fewest pages: {fewest?.Title} ({fewest?.PageCount})");
+var recent = queries.MostRecentlyPublishedBook();
+Console.WriteLine($"Most recently published book: {recent?.Title} ({recent?.PublishedDate:d})");
+Console.WriteLine($"Sum pages between 0 and 500: {queries.SumOfPagesForBooksBetween0And500()}");
+Console.WriteLine($"Concatenated titles after 2015: {queries.ConcatenatedTitlesAfter2015()}");
+Console.WriteLine($"Average title characters: {queries.AverageTitleCharacters():F2}");
+Console.WriteLine("Books after 2000 grouped by year:");
+foreach (var g in queries.BooksAfter2000GroupedByYear())
+{
+    Console.WriteLine($"{g.Key}: {g.Count()} books");
+}
+Console.WriteLine("Books lookup by first letter for 'A':");
+var lookup = queries.BooksLookupByFirstLetter();
+foreach (var b in lookup['A'])
+{
+    Console.WriteLine(b.Title);
+}
+Console.WriteLine("Books after 2005 with >500 pages:");
+PrintValues(queries.BooksAfter2005WithMoreThan500Pages());
+
 void PrintValues(IEnumerable<Book> books)
 {
     Console.WriteLine("{0,-60} {1,15} {2,15}\n", "Title", "Pages", "Published Date");
