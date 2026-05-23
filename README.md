@@ -43,8 +43,17 @@ Current operations in the sample run:
 - Execute dynamic text searches for `android`, `java`, and `c#`
 - Validate if all books have a status
 - Check whether any book was published in 2005
+- Count books between 200 and 500 pages
+- Print the earliest publication date and the most recent book
+- Print the book with the fewest pages
+- Print the sum of pages for 0-500 page books
+- Print concatenated titles after 2015
+- Print average title length
+- Show books after 2000 grouped by year
+- Show a lookup of books keyed by the first title letter
+- Print books after 2005 with more than 500 pages
 
-This sample flow is designed to show both static LINQ queries and dynamic runtime filtering.
+This sample flow is designed to show both static LINQ queries and dynamic runtime filtering, plus summary and grouping queries.
 
 ### 2. `Book.cs`
 
@@ -73,9 +82,24 @@ Features included:
   - `GetAllBooks()`
   - `BooksAfter2000()`
   - `BooksWithMoreThan250PagesWithWordsInAction()`
+  - `PythonBooks()`
+  - `BooksOver450PagesSortedByPageNumberInDescendingOrder()`
+  - `FirstThreeJavaBooksOrderedByDate()`
 - Boolean summary methods:
   - `AllBooksHaveStatus()`
   - `IfAnyBookWasPublished2005()`
+- New summary and aggregation methods:
+  - `CountBooksBetween200And500Pages()`
+  - `EarliestPublicationDate()`
+  - `MaxPageCount()`
+  - `BookWithFewestPages()`
+  - `MostRecentlyPublishedBook()`
+  - `SumOfPagesForBooksBetween0And500()`
+  - `ConcatenatedTitlesAfter2015()`
+  - `AverageTitleCharacters()`
+  - `BooksAfter2000GroupedByYear()`
+  - `BooksLookupByFirstLetter()`
+  - `BooksAfter2005WithMoreThan500Pages()`
 - Dynamic text search method:
   - `SearchBooks(string term)`
 
@@ -94,9 +118,9 @@ public bool AllBooksHaveStatus()
     return booksCollection.All(p => p.Status != string.Empty);
 }
 
-public bool IfAnyBookWasPublished2005()
+public Book BookWithFewestPages()
 {
-    return booksCollection.Any(p => p.PublishedDate.Year == 2005);
+    return booksCollection.Where(p => p.PageCount > 0).MinBy(p => p.PageCount);
 }
 ```
 
