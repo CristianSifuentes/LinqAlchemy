@@ -110,7 +110,7 @@ public class LinqQueries
 
     public Book MostRecentlyPublishedBook()
     {
-        return booksCollection.MaxBy(p=> p.PublishedDate);
+        return booksCollection.MaxBy(p => p.PublishedDate);
     }
 
     public int SumOfPagesForBooksBetween0And500()
